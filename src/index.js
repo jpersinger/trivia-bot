@@ -5,7 +5,7 @@ var redisStorage = require('botkit-storage-redis')({});
 // rule
 import trivia from './trivia';
 
-const token = '';
+const token = process.env.token;
 
 /**
  * Botkit controller
