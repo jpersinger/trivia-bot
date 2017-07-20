@@ -37,16 +37,18 @@ export default function (controller) {
     controller.hears('trivia', ['direct_message', 'direct_mention', 'mention'], function(bot, message) {
         controller.storage.teams.get('trivia', (err, resp) => {
             if (resp == null || resp.data == null) {
+
                 fetch('http://jservice.io/api/random')
                     .then((resp) => {
                         return resp.json();
                     }).then((json) => {
-                        let fQuestion = formatText(json[0].question);
-                        bot.reply(message, 'In the category _' + json[0].category.title + '_: ' +  fQuestion);
-                        controller.storage.teams.save({id: 'trivia', data: {category: json[0].category.title, question: fQuestion, answer: json[0].answer}});
+                        let question = 'In the category _' + json[0].category.title + '_: ' + json[0].question;
+                        bot.reply(message, question);
+                        controller.storage.teams.save({id: 'trivia', data: {question: question, answer: json[0].answer}});
                     });
+
             } else {
-                bot.reply(message, 'In the category _' + resp.data.category + '_: ' + resp.data.question);
+                bot.reply(message, resp.data.question);
             }
         });
     });
